@@ -16,3 +16,4 @@ coverage.xml
 .rnd
 .pytest_cache
 .python-version
+.idea/

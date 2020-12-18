@@ -50,6 +50,7 @@ class CompressionType(object):
     GZIP = 1
     SNAPPY = 2
     LZ4 = 3
+    ZSTD = 4
 
 
 class OffsetType(object):

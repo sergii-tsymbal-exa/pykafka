@@ -189,6 +189,13 @@ class FetchResponse(Response):
                     decompressed = compression.decode_lz4_old_kafka(message.value)
                 messages = self._unpack_message_set(decompressed,
                                                     partition_id=partition_id)
+            elif message.compression_type == CompressionType.ZSTD:
+                if parse_version(broker_version) >= parse_version('2.1.0'):
+                    decompressed = compression.decode_zstd(message.value)
+                else:
+                    raise ValueError("zstd requires kafka 2.1.0 or newer")
+                messages = self._unpack_message_set(decompressed,
+                                                    partition_id=partition_id)
             if messages[-1].offset < message.offset:
                 # With protocol 1, offsets from compressed messages start at 0
                 assert messages[0].offset == 0

@@ -386,9 +386,10 @@ class ProducerIntegrationTests(unittest2.TestCase):
         [CompressionType.GZIP],
         [CompressionType.SNAPPY],
         [CompressionType.LZ4],
+        [CompressionType.ZSTD],
     ])
     def test_sync_produce_compression_large_message(self, compression_type):
-        if platform.python_implementation() == 'PyPy' and compression_type == CompressionType.LZ4:
+        if platform.python_implementation() == 'PyPy' and compression_type == CompressionType.LZ4:  # TODO: check zstd
             pytest.skip("PyPy doesn't work well with LZ4")
 
         consumer = self._get_consumer()

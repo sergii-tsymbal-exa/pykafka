@@ -16,7 +16,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-__all__ = ["encode_gzip", "decode_gzip", "encode_snappy", "decode_snappy", "encode_lz4", "decode_lz4", "encode_lz4_old_kafka","decode_lz4_old_kafka"]
+__all__ = ["encode_gzip", "decode_gzip", "encode_snappy", "decode_snappy",
+           "encode_lz4", "decode_lz4", "encode_lz4_old_kafka","decode_lz4_old_kafka",
+           "encode_zstd", "decode_zstd"]
 import gzip
 from io import BytesIO
 import logging
@@ -55,6 +57,11 @@ try:
     import xxhash
 except ImportError:
     xxhash = None
+
+try:
+    import zstandard as zstd
+except ImportError:
+    zstd = None
 
 log = logging.getLogger(__name__)
 # constants used in snappy xerial encoding/decoding
@@ -284,3 +291,21 @@ def decode_lz4_old_kafka(buff):
         buff[header_size:]
     ])
     return decode_lz4(munged_buff)
+
+
+def encode_zstd(buff):
+    """Encode a buffer using zstd
+    """
+    if zstd is None:
+        raise ImportError("Please install zstandard")
+    output = zstd.ZstdCompressor().compress(buff)
+    return output
+
+
+def decode_zstd(buff):
+    """Decode a buffer using zstd
+    """
+    if zstd is None:
+        raise ImportError("Please install zstandard")
+    output = zstd.ZstdDecompressor().decompress(buff)
+    return output

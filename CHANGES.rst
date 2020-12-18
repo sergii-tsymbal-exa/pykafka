@@ -1,5 +1,11 @@
 Changelog
 =========
+2.8.2-dev.1 (2020-12-18)
+________________________
+
+Miscellaneous
+-------------
+* Added support for zstd compression to the `Producer` and `SimpleConsumer`
 
 2.8.1-dev.1 (2018-11-15)
 ------------------------
