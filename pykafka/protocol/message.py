@@ -244,11 +244,8 @@ class MessageSet(Serializable):
                 compressed = compression.encode_lz4(buffer(uncompressed))
             else:
                 compressed = compression.encode_lz4_old_kafka(buffer(uncompressed))
-        elif self.compression_type == CompressionType.ZSTD:
-            if parse_version(self._broker_version) >= parse_version('2.1.0'):
-                compressed = compression.encode_zstd(buffer(uncompressed))
-            else:
-                raise ValueError("zstd requires kafka 2.1.0 or newer")
+        elif self.compression_type == CompressionType.ZSTD:  # TODO: version >= 2.1.0
+            compressed = compression.encode_zstd(buffer(uncompressed))
         else:
             raise TypeError("Unknown compression: %s" % self.compression_type)
         protocol_version = max((m.protocol_version for m in self._messages))
